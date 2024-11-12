@@ -12,10 +12,10 @@ binary_tree*  tree_create(){
     return tree;
 }
 
-binary_tree *tree_from_array(int32_t array[], int32_t size)
+binary_tree *tree_from_array(uint32_t array[], uint32_t size) 
 {
-    if(!array){
-        return NULL;
+    if(!array){ //if the array is incorrect just make sure we wont iterate through it at all and an empty tree will be returned
+        size = 0; 
     }
     binary_tree* tree = malloc(sizeof(binary_tree));
     if(!tree){
@@ -24,18 +24,19 @@ binary_tree *tree_from_array(int32_t array[], int32_t size)
     tree->root = NULL;
     tree->size  =0;
 
-    for (int32_t i = 0; i < size; i++)
+    for (uint32_t i = 0; i < size; i++)
     {
         tree_add(tree, array[i]);
     }
+
     return tree;
 }
 
-int32_t tree_remove_value(binary_tree *tree, int32_t value)
+uint32_t tree_remove_value(binary_tree *tree, uint32_t value)
 {
 
     if(!tree){
-        return NULL;
+        return 0;
     }
     //step one: navigate to the relevent node
     tree_node* current_node = tree->root;
@@ -157,36 +158,31 @@ tree_node* get_rightmost_subnode(tree_node* target){ //returns a pointer to the 
     return output;
 }
 
-void tree_add(binary_tree *tree, int32_t value)
+void tree_add(binary_tree *tree, uint32_t value)
 {
     if(!tree){
         return;
     }
+
     tree_node* current_node = tree->root;
 
-    tree_node* new_node = malloc(sizeof(tree_node)); //handle bad malloc call
-    if(!new_node){
-        return;
-    }
-
-    new_node->value = value; //initialize new node
-    new_node->left = NULL;
-    new_node->right = NULL;
-
-
     if(!current_node){ //the tree has no elements
+        tree_node* new_node = create_node(value);
+        if(!new_node){return;}
         tree->root = new_node;
         tree->size = 1;
         return;
     }
     while (current_node)
     {
-        if(value == current_node->value){
+        if(value == current_node->value){ //if we already have the node, exit early
             return;
         } else if(value > current_node->value){ //new value is greater than current node
             if(current_node->right){
                 current_node = current_node->right;
             }else{
+                tree_node* new_node = create_node(value);
+                if(!new_node){return;}
                 current_node->right = new_node; 
                 break;   
   
@@ -195,6 +191,8 @@ void tree_add(binary_tree *tree, int32_t value)
             if(current_node->left){
                 current_node = current_node->left;
             }else{
+                tree_node* new_node = create_node(value);
+                if(!new_node){return;}
                 current_node->left = new_node;
                 break;   
             }
@@ -203,4 +201,16 @@ void tree_add(binary_tree *tree, int32_t value)
     
     tree->size ++;
     
+}
+
+tree_node* create_node(uint32_t value){
+        tree_node* new_node = malloc(sizeof(tree_node)); 
+        if(!new_node){//handle bad malloc call
+            return NULL;
+        }
+
+        new_node->value = value; //initialize new node
+        new_node->left = NULL;
+        new_node->right = NULL;
+        return new_node;
 }

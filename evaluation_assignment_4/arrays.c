@@ -8,28 +8,27 @@ char* find_string (char* haystack, char* needle){ //borrowed these names from th
     }
     char* current_haystack = haystack;
     char* current_needle = needle;
-    char* needle_start = NULL;
+    char* needle_start = haystack;
 
     while(*current_haystack != '\0'){ //iterate through the haystack
 
-        if(*current_haystack == *current_needle){ //if the next character matches
+        if(*current_haystack == *current_needle){ //if the current character matches
             
-            if(current_needle == needle){ //if we are on the first character of the needle string
-                needle_start = current_haystack;
+            if(current_needle == needle){ //and we are on the first character of the needle string
+                needle_start = current_haystack; //note the placement in the haystack where we are starting the needle string
             }
 
-            current_needle++;
+            current_needle++; //iterate the needle
 
-            if(*current_needle == '\0'){ //we made it through the whole needle string
-                return needle_start;
+            if(*current_needle == '\0'){ //then if we are at the end of the needle
+                return needle_start; //return the position where we started this iteration through the needle
             }
 
 
-        }else{ //if there is no match reset to the start of the needle
+        }else{ //if there is no match reset to the start of the needle, and resume our search where we last started going through the needle
             if(current_needle != needle){
-
                 current_needle = needle;
-                continue;
+                current_haystack = needle_start;
             }
         }
         
@@ -41,12 +40,15 @@ char* find_string (char* haystack, char* needle){ //borrowed these names from th
     return current_haystack;
 }
 
-char* get_substring (char* string, int32_t start, int32_t end){
+char* get_substring (char* string, uint32_t start, uint32_t end){ 
     if(!string){
         return NULL;
     }
-    char* output = malloc(end-start);
-    for (int32_t i = 0; i <= end; i++)
+    if(start > end){
+        return NULL;
+    }
+    char* output = malloc((end-start));
+    for (uint32_t i = 0; i < end; i++) 
     {
         if(string[i] == '\0'){
             return NULL;
@@ -56,19 +58,20 @@ char* get_substring (char* string, int32_t start, int32_t end){
             output[i-start] = string[i];
         }
     }
+    output[end-start] = '\0';
     return output;
 }
 
-int32_t* array_intersection(int32_t a[], int32_t size_a, int32_t b[], int32_t size_b, int32_t* intersection_size)
+uint32_t* array_intersection(uint32_t a[], uint32_t size_a, uint32_t b[], uint32_t size_b, uint32_t* intersection_size)
 {   
     if((!a) || (!b)){
         return NULL;
     }
-    int8_t *truth_table = calloc(size_b, sizeof(int8_t)); //create a table to keep track of which elements are in the intersection
-    int32_t counter = 0;
+    uint8_t *truth_table = calloc(size_b, sizeof(uint8_t)); //create a table to keep track of which elements are in the intersection
+    uint32_t counter = 0;
     binary_tree* tree_a = tree_from_array(a, size_a);
     
-    for (int32_t i = 0; i < size_b; i++)
+    for (uint32_t i = 0; i < size_b; i++)
     {
         if(tree_remove_value(tree_a, b[i]) == 1){
             truth_table[i] = 1;
@@ -76,10 +79,10 @@ int32_t* array_intersection(int32_t a[], int32_t size_a, int32_t b[], int32_t si
         }
     }
 
-    int32_t *output = calloc(counter, sizeof(int32_t));
-    int32_t next = 0;
+    uint32_t *output = calloc(counter, sizeof(uint32_t));
+    uint32_t next = 0;
 
-    for (int32_t i = 0; i < size_b; i++)
+    for (uint32_t i = 0; i < size_b; i++)
     {
         if(truth_table[i] == 1){
             output[next] = b[i];

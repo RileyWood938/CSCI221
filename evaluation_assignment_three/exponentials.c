@@ -9,13 +9,12 @@ unsigned int exponentiate(unsigned int x, unsigned int y)
     int output = x;
     while (y > 1)
     {
-        if (y % 2 == 1) //if Y odd
+        if (y % 2) //if Y odd
         {
-            remainder = x * remainder; 
-            //could add a "y--;"" here if you wanted things to be more readable/consistant. Not required for my architecture and compiler. It also reduces effeciency so I chose to omit it
+            remainder *= output; // when you reach this statement, remainer *= x works only on the first iteration. After that the number of exponentiations you are removing incrases with the current step of the loop. fortunately, output has the correct associated number of exponentiations we have removed so we can multiply that many more into the remainder each time
         }
-        output = output * output; //square output
-        y = y / 2;
+        output *= output; //square output 
+        y /= 2; 
     } 
     return remainder * output;
 }

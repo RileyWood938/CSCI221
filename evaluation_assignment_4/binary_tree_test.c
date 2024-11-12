@@ -16,7 +16,7 @@ int main(){
     tree_add(tree, 7);
     tree_add(tree, 0);
 
-    int32_t array[] = {9, 11, 13};
+    uint32_t array[] = {9, 11, 13};
     binary_tree* tree_2 = tree_from_array(array, 3);
     tree_remove_value(tree_2, 9);
     tree_remove_value(tree_2, 11);

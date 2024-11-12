@@ -60,21 +60,21 @@ char choose_mover(unsigned int input){
 pair find_divisor(unsigned int in[], unsigned int in_size){
     pair output; 
         
-            for(unsigned int i=0; i<in_size; i++){ //pretty simple double loop to get divisors. there might be a faster way to do this.
-                for(unsigned int j=0; j<in_size; j++){
-                    if(i==j) //ignore duplicates
-                        continue;
-                    
-                    if(in[i]%in[j]==0){ //does j divide i?
-                        output.first = in[i];
-                        output.second = in[j];
-                        return output;
-                    }
-                }
+    for(unsigned int i=0; i<in_size; i++){ //pretty simple double loop to get divisors. there might be a faster way to do this.
+        for(unsigned int j=0; j<in_size; j++){
+            if(i==j) //ignore duplicates
+                continue;
+            
+            if(in[i]%in[j]==0){ //does j divide i?
+                output.first = in[j];
+                output.second = in[i];
+                return output;
             }
-            output.first = 0;
-            output.second = 0;
-            return output;
+        }
+    }
+    output.first = 0;
+    output.second = 0;
+    return output;
 }
 
 
@@ -111,11 +111,9 @@ unsigned int fibonacci(unsigned int input){
     
     if(1>input){
         return 0;
-    }else if(2>input){ //I feel like my loop should be able to handle the case n=1 but I couldn't quite get it working
-        return 1;
     }
 
-    for(unsigned int i=0; i<input-1; i++){ //input reduced by one to account for the n=1 case being handled outside the loop
+    for(unsigned int i=0; i<input-1; i++){ 
         unsigned int extra_num = last_num;
         last_num = current_num;
         current_num += extra_num;
